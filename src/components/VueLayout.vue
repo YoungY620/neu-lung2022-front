@@ -2,7 +2,7 @@
   <div>
     <el-container>
         <el-header class="header">
-          <img alt="neu lung" style="height: 60px;margin-right:20px" src="../assets/name.png">
+          <img @click="handleClickLogo" alt="neu lung" style="height: 60px;margin-right:20px" src="../assets/name.png">
           <button @click="chooseTab0" :class="tab0Class">
             开始分析
           </button>
@@ -12,9 +12,9 @@
         </el-header>
         <el-main class="main">
           <el-scrollbar>
-            <hello-world v-if="currentTab===-1"></hello-world>
-            <analyze-page v-if="currentTab===0">
-            </analyze-page>
+            <hello-world v-if="currentTab===-1" @choose0="chooseTab0" @choose1="chooseTab1"></hello-world>
+            <analyze-page v-if="currentTab===0"></analyze-page>
+            <data-manage v-if="currentTab===1"></data-manage>
           </el-scrollbar>
         </el-main>
     </el-container>
@@ -24,6 +24,7 @@
 <script>
   import { ElContainer, ElHeader, ElMain} from 'element-plus'
   import AnalyzePage from "./AnalyzePage.vue"
+  import DataManage from "./DataManage.vue"
   import HelloWorld from "./HelloWorld.vue"
   export default {
     components: {
@@ -31,7 +32,8 @@
       // ElAffix, 
       // ElScrollbar,
       AnalyzePage,
-      HelloWorld
+      HelloWorld,
+      DataManage
     },
     data() {
       return {
@@ -41,17 +43,20 @@
       }
     },
     methods: {
-      chooseTab0: function(env){
-        console.log(env);
+      chooseTab0: function(){
         this.currentTab = 0
         this.tab0Class = "tab-button-active";
         this.tab1Class = "tab-button";
       },
-      chooseTab1: function(env){
-        console.log(env);
+      chooseTab1: function(){
         this.currentTab = 1
         this.tab0Class = "tab-button";
         this.tab1Class = "tab-button-active";
+      },
+      handleClickLogo(){
+        this.currentTab = -1
+        this.tab0Class = "tab-button";
+        this.tab1Class = "tab-button";
       }
     }
   }
