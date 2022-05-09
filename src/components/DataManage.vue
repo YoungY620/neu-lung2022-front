@@ -7,14 +7,23 @@
           <template #default="scope">
             <div style="display: flex; align-items: center">
               <el-image
+                @click="handleShowImgDetail(scope.row.url)"
                 :src="scope.row.url"
                 :initial-index="4"
                 fit="cover" lazy
               />
             </div>
-          </template> </el-table-column
-        >>
-        <el-table-column prop="file_name" label="File Name" />
+          </template> 
+        </el-table-column>
+        <el-table-column prop="file_name" label="File Name" width="220">
+          <template #default="scope">
+            <div style="display: flex; align-items: center; flex-direction: row; gap:5px;">
+              <span width="100" >{{scope.row.file_name}}</span>
+              <el-button size="small" type="primary" style="margin-left:0" circle><el-icon><edit-pen /></el-icon></el-button>
+              <el-button size="small" type="danger" style="margin-left:0" circle><el-icon><delete /></el-icon></el-button>
+            </div>
+          </template>
+        </el-table-column>
         <el-table-column prop="a" label="A" />
         <el-table-column prop="b" label="B" />
         <el-table-column prop="c" label="C" />
@@ -97,16 +106,22 @@
       </span>
     </template>
   </el-dialog>
+  <el-image-viewer @close="imageShowDialogVisible=false" v-if="imageShowDialogVisible" hide-on-click-modal
+    :url-list="[currentShownImgUrl]"
+  ></el-image-viewer>
 </template>
 
 <script>
 import DataDashboard from "./DataDashboard.vue";
 import { dynamicBBoxImgUrl } from "./utils";
+import {  EditPen, Delete } from "@element-plus/icons-vue";
 const axios = require("axios");
 export default {
   components: {
     DataDashboard,
     // UploadFilled,
+    EditPen,
+    Delete
   },
   data() {
     return {
@@ -117,6 +132,8 @@ export default {
       detectionEpoch: 50,
       testRatio: 0.2,
       fromScratch: true,
+      imageShowDialogVisible: false,
+      currentShownImgUrl: ""
     };
   },
   methods: {
@@ -155,6 +172,10 @@ export default {
       axios.post("http://localhost:5000/train", formdata);
       this.dialogFormVisible = false;
     },
+    handleShowImgDetail(cUrl){
+      this.currentShownImgUrl = cUrl;
+      this.imageShowDialogVisible = true;
+    }
   },
   created: function () {
     let that = this;
